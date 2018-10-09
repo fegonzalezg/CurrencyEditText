@@ -51,7 +51,15 @@ class CurrencyTextWatcher implements TextWatcher {
 
                 if (!TextUtils.isEmpty(updatedInput) && !updatedInput.equals("-")) {
                     //Store a copy of the raw input to be retrieved later by getRawValue
-                    editText.setRawValue(Long.valueOf(updatedInput));
+                    try {
+                        editText.setRawValue(Long.valueOf(updatedInput));
+                    } catch (NumberFormatException e) {
+                        //Cannot parse string to a long anymore, so fallback to the last good input and don't allow user to input more digits
+                        textToDisplay = lastGoodInput;
+                        editText.setText(textToDisplay);
+                        moveCursorAfterLastDigit();
+                        return;
+                    }
                 }
 
                 try {
