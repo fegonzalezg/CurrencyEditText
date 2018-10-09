@@ -6,7 +6,6 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.EditText;
-
 import java.util.Currency;
 import java.util.Locale;
 
@@ -38,14 +37,14 @@ public class CurrencyEditText extends EditText {
     /**
      * Enable the user to input negative values
      */
-    public void setAllowNegativeValues(boolean negativeValuesAllowed){
+    public void setAllowNegativeValues(boolean negativeValuesAllowed) {
         allowNegativeValues = negativeValuesAllowed;
     }
 
     /**
      * Returns whether or not negative values have been allowed for this CurrencyEditText field
      */
-    public boolean areNegativeValuesAllowed(){
+    public boolean areNegativeValuesAllowed() {
         return allowNegativeValues;
     }
 
@@ -53,14 +52,14 @@ public class CurrencyEditText extends EditText {
      * Retrieve the raw value that was input by the user in their currencies lowest denomination (e.g. pennies).
      *
      * IMPORTANT: Remember that the location of the decimal varies by currentCurrency/Locale. This method
-     *  returns the raw given value, and does not account for locality of the user. It is up to the
-     *  calling application to handle that level of conversion.
-     *  For example, if the text of the field is $13.37, this method will return a long with a
-     *  value of 1337, as penny is the lowest denomination for USD. It will be up to the calling
-     *  application to know that it needs to handle this value as pennies and not some other denomination.
+     * returns the raw given value, and does not account for locality of the user. It is up to the
+     * calling application to handle that level of conversion.
+     * For example, if the text of the field is $13.37, this method will return a long with a
+     * value of 1337, as penny is the lowest denomination for USD. It will be up to the calling
+     * application to know that it needs to handle this value as pennies and not some other denomination.
      *
      * @return The raw value that was input by the user, in the lowest denomination of that users
-     *  deviceLocale.
+     * deviceLocale.
      */
     public long getRawValue() {
         return rawValue;
@@ -71,7 +70,7 @@ public class CurrencyEditText extends EditText {
      *
      * @param value - The value to be converted, represented in the target currencies lowest denomination (e.g. pennies).
      */
-    public void setValue(long value){
+    public void setValue(long value) {
         String formattedText = format(value);
         setText(formattedText);
     }
@@ -96,9 +95,10 @@ public class CurrencyEditText extends EditText {
      * this CurrencyEditText instance. If your use case dictates that Currency and Locale
      * should never break from their default pairing, use 'configureViewForLocale(locale)' instead
      * of this method.
+     *
      * @param locale The deviceLocale to set the CurrencyEditText box to adhere to.
      */
-    public void setLocale(Locale locale){
+    public void setLocale(Locale locale) {
         currentLocale = locale;
         refreshView();
     }
@@ -108,7 +108,9 @@ public class CurrencyEditText extends EditText {
      */
     public String getHintString() {
         CharSequence result = super.getHint();
-        if (result == null) return null;
+        if (result == null) {
+            return null;
+        }
         return super.getHint().toString();
     }
 
@@ -117,7 +119,7 @@ public class CurrencyEditText extends EditText {
      * to use. This value will be based on the current Currency object unless the value
      * was overwritten by setDecimalDigits().
      */
-    public int getDecimalDigits(){
+    public int getDecimalDigits() {
         return decimalDigits;
     }
 
@@ -130,11 +132,11 @@ public class CurrencyEditText extends EditText {
      * value is not null/empty.
      *
      * @param digits The number of digits to be shown following the decimal in the formatted text.
-     *               Value must be between 0 and 340 (inclusive).
+     * Value must be between 0 and 340 (inclusive).
      * @throws IllegalArgumentException If provided value does not fall within the range (0, 340) inclusive.
      */
-    public void setDecimalDigits(int digits){
-        if(digits < 0 || digits > 340){
+    public void setDecimalDigits(int digits) {
+        if (digits < 0 || digits > 340) {
             throw new IllegalArgumentException("Decimal Digit value must be between 0 and 340");
         }
         decimalDigits = digits;
@@ -154,7 +156,7 @@ public class CurrencyEditText extends EditText {
      * Note that this method will set the decimalDigits field, potentially overriding
      * values from previous setDecimalDigits calls.
      */
-    public void configureViewForLocale(Locale locale){
+    public void configureViewForLocale(Locale locale) {
         this.currentLocale = locale;
         Currency currentCurrency = getCurrencyForLocale(locale);
         decimalDigits = currentCurrency.getDefaultFractionDigits();
@@ -167,9 +169,10 @@ public class CurrencyEditText extends EditText {
      * NOTE: Be absolutely sure that this value is supported by ISO 3166. See
      * Java.util.Locale.getISOCountries() for a list of currently supported ISO 3166 locales (note that this list
      * may not be identical on all devices)
+     *
      * @param locale The fallback locale used to recover gracefully in the event of the current locale value failing.
      */
-    public void setDefaultLocale(Locale locale){
+    public void setDefaultLocale(Locale locale) {
         this.defaultLocale = locale;
     }
 
@@ -177,28 +180,30 @@ public class CurrencyEditText extends EditText {
      * The currently held default Locale to fall back on in the event of a failure with the Locale field (typically
      * due to the locale being set to a non-standards-compliant value.
      */
-    public Locale getDefaultLocale(){
+    public Locale getDefaultLocale() {
         return defaultLocale;
     }
 
     /**
      * Pass in a value to have it formatted using the same rules used during data entry.
+     *
      * @param val A string which represents the value you'd like formatted. It is expected that this string will be in the same format returned by the getRawValue() method (i.e. a series of digits, such as
-     *            "1000" to represent "$10.00"). Note that formatCurrency will take in ANY string, and will first strip any non-digit characters before working on that string. If the result of that processing
-     *            reveals an empty string, or a string whose number of digits is greater than the max number of digits, an exception will be thrown.
+     * "1000" to represent "$10.00"). Note that formatCurrency will take in ANY string, and will first strip any non-digit characters before working on that string. If the result of that processing
+     * reveals an empty string, or a string whose number of digits is greater than the max number of digits, an exception will be thrown.
      * @return A deviceLocale-formatted string of the passed in value, represented as currentCurrency.
      */
-    public String formatCurrency(String val){
+    public String formatCurrency(String val) {
         return format(val);
     }
 
     /**
      * Pass in a value to have it formatted using the same rules used during data entry.
+     *
      * @param rawVal A long which represents the value you'd like formatted. It is expected that this value will be in the same format returned by the getRawValue() method (i.e. a series of digits, such as
-     *            "1000" to represent "$10.00").
+     * "1000" to represent "$10.00").
      * @return A deviceLocale-formatted string of the passed in value, represented as currentCurrency.
      */
-    public String formatCurrency(long rawVal){
+    public String formatCurrency(long rawVal) {
         return format(rawVal);
     }
 
@@ -206,20 +211,20 @@ public class CurrencyEditText extends EditText {
     PRIVATE HELPER METHODS
      */
 
-    private void refreshView(){
+    private void refreshView() {
         setText(format(getRawValue()));
         updateHint();
     }
 
-    private String format(long val){
+    private String format(long val) {
         return CurrencyTextFormatter.formatText(String.valueOf(val), currentLocale, defaultLocale, decimalDigits);
     }
 
-    private String format(String val){
+    private String format(String val) {
         return CurrencyTextFormatter.formatText(val, currentLocale, defaultLocale, decimalDigits);
     }
 
-    private void init(){
+    private void init() {
         this.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         currentLocale = retrieveLocale();
@@ -228,15 +233,15 @@ public class CurrencyEditText extends EditText {
         initCurrencyTextWatcher();
     }
 
-    private void initCurrencyTextWatcher(){
-        if(textWatcher != null){
+    private void initCurrencyTextWatcher() {
+        if (textWatcher != null) {
             this.removeTextChangedListener(textWatcher);
         }
         textWatcher = new CurrencyTextWatcher(this);
         this.addTextChangedListener(textWatcher);
     }
 
-    private void processAttributes(Context context, AttributeSet attrs){
+    private void processAttributes(Context context, AttributeSet attrs) {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CurrencyEditText);
         this.hintCache = getHintString();
         updateHint();
@@ -248,7 +253,7 @@ public class CurrencyEditText extends EditText {
     }
 
     private void updateHint() {
-        if(hintCache == null){
+        if (hintCache == null) {
             setHint(getDefaultHintValue());
         }
     }
@@ -256,43 +261,45 @@ public class CurrencyEditText extends EditText {
     private String getDefaultHintValue() {
         try {
             return Currency.getInstance(currentLocale).getSymbol();
-        }
-        catch(Exception e){
-            Log.w("CurrencyEditText", String.format("An error occurred while getting currency symbol for hint using locale '%s', falling back to defaultLocale", currentLocale));
-            try{
+        } catch (Exception e) {
+            Log.w("CurrencyEditText",
+                  String.format("An error occurred while getting currency symbol for hint using locale '%s', falling back to defaultLocale",
+                                currentLocale));
+            try {
                 return Currency.getInstance(defaultLocale).getSymbol();
-            }
-            catch(Exception e1){
-                Log.w("CurrencyEditText", String.format("An error occurred while getting currency symbol for hint using default locale '%s', falling back to USD", defaultLocale));
+            } catch (Exception e1) {
+                Log.w("CurrencyEditText",
+                      String.format("An error occurred while getting currency symbol for hint using default locale '%s', falling back to USD",
+                                    defaultLocale));
                 return Currency.getInstance(Locale.US).getSymbol();
             }
 
         }
     }
 
-    private Locale retrieveLocale(){
+    private Locale retrieveLocale() {
         Locale locale;
-        try{
+        try {
             locale = getResources().getConfiguration().locale;
-        }
-        catch(Exception e){
-            Log.w("CurrencyEditText", String.format("An error occurred while retrieving users device locale, using fallback locale '%s'", defaultLocale), e);
+        } catch (Exception e) {
+            Log.w("CurrencyEditText",
+                  String.format("An error occurred while retrieving users device locale, using fallback locale '%s'", defaultLocale), e);
             locale = defaultLocale;
         }
         return locale;
     }
 
-    private Currency getCurrencyForLocale(Locale locale){
+    private Currency getCurrencyForLocale(Locale locale) {
         Currency currency;
         try {
             currency = Currency.getInstance(locale);
-        }
-        catch(Exception e){
-            try{
-                Log.w("CurrencyEditText", String.format("Error occurred while retrieving currency information for locale '%s'. Trying default locale '%s'...", currentLocale, defaultLocale));
+        } catch (Exception e) {
+            try {
+                Log.w("CurrencyEditText",
+                      String.format("Error occurred while retrieving currency information for locale '%s'. Trying default locale '%s'...",
+                                    currentLocale, defaultLocale));
                 currency = Currency.getInstance(defaultLocale);
-            }
-            catch(Exception e1){
+            } catch (Exception e1) {
                 Log.e("CurrencyEditText", "Both device and configured default locales failed to report currentCurrency data. Defaulting to USD.");
                 currency = Currency.getInstance(Locale.US);
             }

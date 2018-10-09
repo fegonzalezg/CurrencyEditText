@@ -13,7 +13,7 @@ class CurrencyTextWatcher implements TextWatcher {
      * A specialized TextWatcher designed specifically for converting EditText values to a pretty-print string currency value.
      *
      * @param textBox The EditText box to which this TextWatcher is being applied.
-     *                Used for replacing user-entered text with formatted text as well as handling cursor position for inputting monetary values
+     * Used for replacing user-entered text with formatted text as well as handling cursor position for inputting monetary values
      */
     CurrencyTextWatcher(CurrencyEditText textBox) {
         editText = textBox;
