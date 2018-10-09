@@ -55,7 +55,11 @@ class CurrencyTextWatcher implements TextWatcher {
                 }
 
                 try {
-                    textToDisplay = formatAsCurrency(updatedInput);
+                    if (editText.getRawValue() == 0) {
+                        textToDisplay = "";
+                    } else {
+                        textToDisplay = formatAsCurrency(updatedInput);
+                    }
                     lastGoodInput = textToDisplay;
                 } catch (IllegalArgumentException ignored) {
                     textToDisplay = lastGoodInput;
